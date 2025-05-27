@@ -1,0 +1,39 @@
+{
+  "name": "Dev Environment",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "dev-env", // Must match the service name in docker-compose.yml
+
+  // This should match the 'working_dir' and where your project code is mounted in docker-compose.yml
+  "workspaceFolder": "/workspace", 
+
+  "remoteUser": "coder",
+
+  // This command runs once after the container is created.
+  // The Dockerfile now also handles channel setup, so this might be redundant
+  // but is harmless (nix-channel --add is idempotent, --update just refreshes).
+  // You can choose to keep it or remove it if the Dockerfile's channel setup is sufficient.
+  "postCreateCommand": "echo 'Dev container created. Ensuring Nix channels are up to date via postCreateCommand...' && . ~/.nix-profile/etc/profile.d/nix.sh && nix-channel --list && nix-channel --update",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "args": ["-l"] // Start bash as a login shell
+          }
+        },
+        "nixEnvSelector.nixFile": "${workspaceFolder}/flake.nix" // Uncomment if you use this extension
+      },
+      // Extensions to be automatically installed inside the dev container.
+      // Add/remove as per your needs.
+      "extensions": [
+        "jnoortheen.nix-ide",
+        // "eamodio.gitlens",
+        "ms-azuretools.vscode-docker", 
+        "arrterian.nix-env-selector" 
+      ]
+    }
+  }
+}

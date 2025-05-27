@@ -1,0 +1,29 @@
+# OS-generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor-specific temporary or state files
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# VS Code local workspace settings/state
+# Settings and extensions for the *dev container itself* should be in .devcontainer/devcontainer.json
+# This ignores user-specific local workspace state if you open this project folder directly.
+.vscode/
+
+# Docker Compose local override files
+# These are often used for local-only configurations and not shared.
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Local environment variables (if you use a .env file for local testing)
+# Actual secrets should never be committed.
+.env
+
+# Any local build artifacts or logs from testing this setup (less common for this type of repo)
+*.log
+build/
+dist/

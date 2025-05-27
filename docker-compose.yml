@@ -1,0 +1,55 @@
+services:
+  dev-env: # Ensuring service name matches devcontainer.json, adjust if you prefer dev-env
+    build:
+      context: .
+      dockerfile: Dockerfile.base # Or your actual Dockerfile name
+      args:
+        USERNAME: coder
+        # You can also pass USER_UID and USER_GID if needed by your Dockerfile ARGs
+        # USER_UID: 1000
+        # USER_GID: 1000
+    image: dev-env:latest # Optional: custom name for the built image
+
+    user: coder
+    working_dir: /workspace # Your project code will be mounted here
+
+    volumes:
+      # Mount current project directory into /workspace in the container
+      - .:/workspace:cached
+
+      # Persist the entire /home/coder directory
+      - coder_home:/home/coder
+
+      # Persist the Nix store
+      - nix_store:/nix
+
+    environment:
+      # Configure Docker CLI to use the 'dind' service
+      - DOCKER_HOST=tcp://dind:2376
+      
+    networks:
+      - dind_network
+
+    depends_on:
+      - dind
+
+    tty: true
+    stdin_open: true
+
+  dind: # Docker-in-Docker service
+    image: docker:26-dind
+    privileged: true
+    command: ["dockerd", "-H", "tcp://0.0.0.0:2376", "-H", "unix:///var/run/docker.sock", "--tls=false"]
+    volumes:
+      # Persist Docker data for the dind service
+      - dind_data:/var/lib/docker
+    networks:
+      - dind_network
+
+volumes:
+  coder_home: {}
+  nix_store: {}
+  dind_data: {}
+
+networks:
+  dind_network: {}
