@@ -2,7 +2,7 @@ services:
   dev-env: # Ensuring service name matches devcontainer.json, adjust if you prefer dev-env
     build:
       context: .
-      dockerfile: Dockerfile.base # Or your actual Dockerfile name
+      dockerfile: Dockerfile
       args:
         USERNAME: coder
         # You can also pass USER_UID and USER_GID if needed by your Dockerfile ARGs
